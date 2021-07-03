@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 )
@@ -24,8 +24,9 @@ func main() {
 		fmt.Println(err)
 	}
 
-	for _, object := range output.QueryDefinitions {
-		fmt.Printf("id=%s name=%s query:%s\n", aws.ToString(object.QueryDefinitionId), aws.ToString(object.Name), aws.ToString(object.QueryString))
+	queryDefinitionJson, err := json.MarshalIndent(output.QueryDefinitions, "", " ")
+	if err != nil {
+		fmt.Println(err)
 	}
-
+	fmt.Println(string(queryDefinitionJson))
 }
