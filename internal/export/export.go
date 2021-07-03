@@ -1,22 +1,17 @@
-package main
+package export
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/fedy2/cwq/internal/cloudwatch"
+
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 )
 
-func main() {
-	// Load the Shared AWS Configuration (~/.aws/config)
-	cfg, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	client := cloudwatchlogs.NewFromConfig(cfg)
+func Export() {
+	client := cloudwatch.NewClient()
 
 	output, err := client.DescribeQueryDefinitions(context.TODO(), &cloudwatchlogs.DescribeQueryDefinitionsInput{})
 
