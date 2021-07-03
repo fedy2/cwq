@@ -5,9 +5,11 @@ import (
 )
 
 type ExportCmd struct {
+	Output string `help:"Write to file instead of stdout" short:"o" placeholder:"file"`
+	Format string `help:"Output format: csv or json" enum:"csv,json" default:"json"`
 }
 
-func (r *ExportCmd) Run(ctx *context.Context) error {
-	Export()
+func (arguments *ExportCmd) Run(ctx *context.Context) error {
+	Export(arguments)
 	return nil
 }

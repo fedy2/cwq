@@ -1,27 +1,32 @@
 package export
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/fedy2/cwq/internal/cloudwatch"
-
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	"github.com/fedy2/cwq/internal/export/format"
+	"github.com/fedy2/cwq/internal/export/output"
 )
 
-func Export() {
+func Export(arguments *ExportCmd) {
 	client := cloudwatch.NewClient()
 
-	output, err := client.DescribeQueryDefinitions(context.TODO(), &cloudwatchlogs.DescribeQueryDefinitionsInput{})
-
+	queryDefinitions, err := client.DescribeQueryDefinitions()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	queryDefinitionJson, err := json.MarshalIndent(output.QueryDefinitions, "", " ")
-	if err != nil {
-		fmt.Println(err)
+	queryDefinitionsAsString := ""
+	switch arguments.Format {
+	case "json":
+		queryDefinitionsAsString = format.ToJson(queryDefinitions)
+	case "csv":
+		queryDefinitionsAsString = format.ToCsv(queryDefinitions)
 	}
-	fmt.Println(string(queryDefinitionJson))
+
+	if arguments.Output != "" {
+		output.ToFile(arguments.Output, queryDefinitionsAsString)
+	} else {
+		output.ToConsole(queryDefinitionsAsString)
+	}
 }
