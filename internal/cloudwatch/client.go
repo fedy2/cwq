@@ -34,3 +34,20 @@ func (client *Client) DescribeQueryDefinitions() ([]QueryDefinition, error) {
 	output, err := client.CwClient.DescribeQueryDefinitions(context.TODO(), &cloudwatchlogs.DescribeQueryDefinitionsInput{})
 	return output.QueryDefinitions, err
 }
+
+func (client *Client) PutQueryDefinitions(queryDefinitions []QueryDefinition) error {
+
+	for _, queryDefinition := range queryDefinitions {
+
+		_, err := client.CwClient.PutQueryDefinition(context.TODO(), &cloudwatchlogs.PutQueryDefinitionInput{
+			Name:              queryDefinition.Name,
+			QueryString:       queryDefinition.QueryString,
+			LogGroupNames:     queryDefinition.LogGroupNames,
+			QueryDefinitionId: queryDefinition.QueryDefinitionId,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
