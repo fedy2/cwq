@@ -17,7 +17,7 @@ var headerRecord = []string{
 	"LogGroupNames",
 }
 
-func ToCsv(queryDefinitions []cloudwatch.QueryDefinition) string {
+func ToCsv(queryDefinitions []cloudwatch.QueryDefinition) (string, error) {
 
 	buffer := new(bytes.Buffer)
 
@@ -25,16 +25,25 @@ func ToCsv(queryDefinitions []cloudwatch.QueryDefinition) string {
 	writer := csv.NewWriter(buffer)
 
 	// TODO: make header optional
-	writer.Write(headerRecord)
+	err := writer.Write(headerRecord)
+	if err != nil {
+		return "", err
+	}
 
 	for _, queryDefinition := range queryDefinitions {
 		var record = toRecord(queryDefinition)
-		writer.Write(record)
+		err := writer.Write(record)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	writer.Flush()
+	if err := writer.Error(); err != nil {
+		return "", err
+	}
 
-	return buffer.String()
+	return buffer.String(), nil
 }
 
 func toRecord(queryDefinition cloudwatch.QueryDefinition) []string {

@@ -1,32 +1,42 @@
 package export
 
 import (
-	"fmt"
-
 	"github.com/fedy2/cwq/internal/cloudwatch"
 	"github.com/fedy2/cwq/internal/export/format"
 	"github.com/fedy2/cwq/internal/export/output"
 )
 
-func Export(arguments *ExportCmd) {
-	client := cloudwatch.NewClient()
+func Export(arguments *ExportCmd) error {
+	client, err := cloudwatch.NewClient()
+	if err != nil {
+		return err
+	}
 
 	queryDefinitions, err := client.DescribeQueryDefinitions()
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	queryDefinitionsAsString := ""
+	err = nil
 	switch arguments.Format {
 	case "json":
-		queryDefinitionsAsString = format.ToJson(queryDefinitions)
+		queryDefinitionsAsString, err = format.ToJson(queryDefinitions)
 	case "csv":
-		queryDefinitionsAsString = format.ToCsv(queryDefinitions)
+		queryDefinitionsAsString, err = format.ToCsv(queryDefinitions)
+	}
+	if err != nil {
+		return err
 	}
 
 	if arguments.Output != "" {
-		output.ToFile(arguments.Output, queryDefinitionsAsString)
+		err = output.ToFile(arguments.Output, queryDefinitionsAsString)
+		if err != nil {
+			return err
+		}
 	} else {
 		output.ToConsole(queryDefinitionsAsString)
 	}
+
+	return nil
 }

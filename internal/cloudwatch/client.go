@@ -2,7 +2,6 @@ package cloudwatch
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
@@ -15,18 +14,18 @@ type Client struct {
 
 type QueryDefinition = types.QueryDefinition
 
-func NewClient() *Client {
+func NewClient() (*Client, error) {
 	// Load the Shared AWS Configuration (~/.aws/config)
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 
 	client := cloudwatchlogs.NewFromConfig(cfg)
 
 	return &Client{
 		CwClient: *client,
-	}
+	}, nil
 }
 
 func (client *Client) DescribeQueryDefinitions() ([]QueryDefinition, error) {

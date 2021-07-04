@@ -1,25 +1,10 @@
 package output
 
 import (
-	"fmt"
 	"os"
 )
 
-func ToFile(name string, data string) {
+func ToFile(name string, data string) error {
 	// TODO: handle override
-	f, err := os.Create(name)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	_, err = f.WriteString(data)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = f.Close()
-	if err != nil {
-		fmt.Println(err)
-	}
+	return os.WriteFile(name, []byte(data), 0644)
 }

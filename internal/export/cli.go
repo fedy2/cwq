@@ -10,6 +10,5 @@ type ExportCmd struct {
 }
 
 func (arguments *ExportCmd) Run(ctx *context.Context) error {
-	Export(arguments)
-	return nil
+	return Export(arguments)
 }

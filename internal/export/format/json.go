@@ -2,16 +2,15 @@ package format
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/fedy2/cwq/internal/cloudwatch"
 )
 
-func ToJson(queryDefinitions []cloudwatch.QueryDefinition) string {
+func ToJson(queryDefinitions []cloudwatch.QueryDefinition) (string, error) {
 	// TODO: pass indentention as argument
 	queryDefinitionsJson, err := json.MarshalIndent(queryDefinitions, "", " ")
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
-	return string(queryDefinitionsJson)
+	return string(queryDefinitionsJson), nil
 }
