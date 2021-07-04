@@ -1,0 +1,34 @@
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      # - 386 # disabled until I discover how to fix: error=failed to build for windows_386: go tool compile: exit status 1 
+              # unsupported setting GO386=387. Consider using GO386=softfloat instead.
+      - amd64
+      - arm
+      - arm64 
+    main: ./cmd/cwq
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
