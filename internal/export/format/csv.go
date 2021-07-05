@@ -17,17 +17,22 @@ var headerRecord = []string{
 	"LogGroupNames",
 }
 
-func ToCsv(queryDefinitions []cloudwatch.QueryDefinition) (string, error) {
+type CsvOptions struct {
+	IncludeHeader bool
+}
+
+func ToCsv(queryDefinitions []cloudwatch.QueryDefinition, options CsvOptions) (string, error) {
 
 	buffer := new(bytes.Buffer)
 
 	// TODO: enable passing CSV options
 	writer := csv.NewWriter(buffer)
 
-	// TODO: make header optional
-	err := writer.Write(headerRecord)
-	if err != nil {
-		return "", err
+	if options.IncludeHeader {
+		err := writer.Write(headerRecord)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	for _, queryDefinition := range queryDefinitions {

@@ -23,7 +23,10 @@ func Export(arguments *ExportCmd) error {
 	case "json":
 		queryDefinitionsAsString, err = format.ToJson(queryDefinitions)
 	case "csv":
-		queryDefinitionsAsString, err = format.ToCsv(queryDefinitions)
+		options := format.CsvOptions{
+			IncludeHeader: arguments.CsvIncludeHeader,
+		}
+		queryDefinitionsAsString, err = format.ToCsv(queryDefinitions, options)
 	}
 	if err != nil {
 		return err
