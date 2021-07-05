@@ -15,8 +15,8 @@ const (
 var cli struct {
 	Debug bool `help:"Enable debug mode."`
 
-	Export  export.ExportCmd  `cmd help:"Exports query definitions."`
-	Import  cimport.ImportCmd `cmd help:"Imports query definitions."`
+	Export  export.ExportCmd  `cmd:"" help:"Exports query definitions."`
+	Import  cimport.ImportCmd `cmd:"" help:"Imports query definitions."`
 	Version kong.VersionFlag  `name:"version" help:"Print version information and quit"`
 }
 

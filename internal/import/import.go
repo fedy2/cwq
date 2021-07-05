@@ -25,7 +25,7 @@ func Import(arguments *ImportCmd) error {
 	}
 
 	if arguments.ClearIds {
-		for i, _ := range queryDefinitions {
+		for i := range queryDefinitions {
 			queryDefinitions[i].QueryDefinitionId = nil
 		}
 	}
