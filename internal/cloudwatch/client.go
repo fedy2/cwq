@@ -29,13 +29,26 @@ func NewClient() (*Client, error) {
 }
 
 func (client *Client) DescribeQueryDefinitions(queryDefinitionNamePrefix string) ([]QueryDefinition, error) {
-	// TODO: handle multi page
 	describeInput := &cloudwatchlogs.DescribeQueryDefinitionsInput{}
 	if queryDefinitionNamePrefix != "" {
 		describeInput.QueryDefinitionNamePrefix = &queryDefinitionNamePrefix
 	}
-	output, err := client.CwClient.DescribeQueryDefinitions(context.TODO(), describeInput)
-	return output.QueryDefinitions, err
+
+	queryDefinitions := make([]QueryDefinition, 0)
+
+	for {
+		output, err := client.CwClient.DescribeQueryDefinitions(context.TODO(), describeInput)
+		if err != nil {
+			return nil, err
+		}
+
+		queryDefinitions = append(queryDefinitions, output.QueryDefinitions...)
+		if output.NextToken == nil {
+			return queryDefinitions, nil
+		}
+
+		describeInput.NextToken = output.NextToken
+	}
 }
 
 func (client *Client) PutQueryDefinitions(queryDefinitions []QueryDefinition) error {
