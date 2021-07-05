@@ -28,10 +28,13 @@ func NewClient() (*Client, error) {
 	}, nil
 }
 
-func (client *Client) DescribeQueryDefinitions() ([]QueryDefinition, error) {
+func (client *Client) DescribeQueryDefinitions(queryDefinitionNamePrefix string) ([]QueryDefinition, error) {
 	// TODO: handle multi page
-	// TODO: enable passing QueryDefinitionNamePrefix option
-	output, err := client.CwClient.DescribeQueryDefinitions(context.TODO(), &cloudwatchlogs.DescribeQueryDefinitionsInput{})
+	describeInput := &cloudwatchlogs.DescribeQueryDefinitionsInput{}
+	if queryDefinitionNamePrefix != "" {
+		describeInput.QueryDefinitionNamePrefix = &queryDefinitionNamePrefix
+	}
+	output, err := client.CwClient.DescribeQueryDefinitions(context.TODO(), describeInput)
 	return output.QueryDefinitions, err
 }
 

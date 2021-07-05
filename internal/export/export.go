@@ -12,7 +12,7 @@ func Export(arguments *ExportCmd) error {
 		return err
 	}
 
-	queryDefinitions, err := client.DescribeQueryDefinitions()
+	queryDefinitions, err := client.DescribeQueryDefinitions(arguments.Prefix)
 	if err != nil {
 		return err
 	}
