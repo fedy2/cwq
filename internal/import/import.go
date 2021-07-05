@@ -24,6 +24,12 @@ func Import(arguments *ImportCmd) error {
 		return err
 	}
 
+	if arguments.ClearIds {
+		for i, _ := range queryDefinitions {
+			queryDefinitions[i].QueryDefinitionId = nil
+		}
+	}
+
 	client, err := cloudwatch.NewClient()
 	if err != nil {
 		return err
