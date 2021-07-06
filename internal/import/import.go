@@ -18,7 +18,12 @@ func Import(arguments *ImportCmd) error {
 	case "json":
 		queryDefinitions, err = format.FromJson(data)
 	case "csv":
-		queryDefinitions, err = format.FromCsv(data)
+		options := format.CsvOptions{
+			HasHeader: arguments.CsvHasHeader,
+			Delimiter: arguments.CsvDelimiter,
+			Comment:   arguments.CsvComment,
+		}
+		queryDefinitions, err = format.FromCsv(data, options)
 	}
 	if err != nil {
 		return err

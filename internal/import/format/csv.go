@@ -7,10 +7,18 @@ import (
 	"github.com/fedy2/cwq/internal/cloudwatch"
 )
 
-func FromCsv(data string) ([]cloudwatch.QueryDefinition, error) {
+type CsvOptions struct {
+	HasHeader bool
+	Delimiter rune
+	Comment   rune
+}
 
-	// TODO: enable passing CSV options
+func FromCsv(data string, options CsvOptions) ([]cloudwatch.QueryDefinition, error) {
+
 	reader := csv.NewReader(strings.NewReader(data))
+
+	reader.Comma = options.Delimiter
+	reader.Comment = options.Comment
 
 	records, err := reader.ReadAll()
 	if err != nil {
@@ -21,12 +29,13 @@ func FromCsv(data string) ([]cloudwatch.QueryDefinition, error) {
 		return []cloudwatch.QueryDefinition{}, nil
 	}
 
-	// TODO: make header optional
-	recordsWithoutHeader := records[1:]
+	if options.HasHeader {
+		records = records[1:]
+	}
 
-	queryDefinitions := make([]cloudwatch.QueryDefinition, len(recordsWithoutHeader))
+	queryDefinitions := make([]cloudwatch.QueryDefinition, len(records))
 
-	for i, record := range recordsWithoutHeader {
+	for i, record := range records {
 		queryDefinitions[i] = fromRecord(record)
 	}
 	return queryDefinitions, nil
