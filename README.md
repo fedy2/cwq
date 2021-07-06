@@ -1,8 +1,14 @@
 # cwq
 A small tool to import and export CloudWatch query definitions.
 
+Withi this tool you can:
+* backup your query definitions
+* restore your query definitions
+* copy the query definitions between different AWS accounts
+* generate/produce your query definitions locally and then import them
+
 ## Installation
-Download and manually install the executable from the release tab.
+Download and manually install the executable from the [release page](https://github.com/fedy2/cwq/releases).
 
 ### Installation via package manager
 Coming soon.
@@ -42,15 +48,16 @@ Usage: cwq export
 Exports query definitions.
 
 Flags:
-  -h, --help             Show context-sensitive help.
-      --debug            Enable debug mode.
-      --version          Print version information and quit
+  -h, --help                       Show context-sensitive help.
+      --debug                      Enable debug mode.
+      --version                    Print version information and quit
 
-  -o, --output=file      Write to file instead of stdout
-      --format="json"    Output format: csv or json
+  -o, --output=file                Write to file instead of stdout
+  -f, --format="json"              Output format: csv or json. Default: json
+      --prefix=STRING              Export the query definitions with a name that starts with the specified prefix.
+      --[no-]csv-include-header    Add an header to the CSV file. Default: true
+      --csv-delimiter=,            Field separator in the CSV file. Default: ,
 ```
-#### Limitations
-* The current version does not support the paging of the response, so if there are too many definitions the export can result incomplete.
 
 ### Import command
 The `import` command imports a list of CloudWatch query definitions into an AWS account.
@@ -64,17 +71,20 @@ Arguments:
   <file>    File containing the query descriptions
 
 Flags:
-  -h, --help             Show context-sensitive help.
-      --debug            Enable debug mode.
-      --version          Print version information and quit
+  -h, --help                   Show context-sensitive help.
+      --debug                  Enable debug mode.
+      --version                Print version information and quit
 
-      --format="json"    File format: csv or json
+  -f, --format="json"          File format: csv or json. Default: json
+      --clear-ids              Strip out the ids from the query definitions
+      --[no-]csv-has-header    The CSV file has an header. Default: true
+      --csv-delimiter=,        Field separator in the CSV file. Default: ,
+      --csv-comment=#          Comment character in the CSV file. Default: #
 ```
 
 #### Limitations
-* If the query definition entry contains a `QueryDefinitionId` this is passed to AWS that will try to update an existing query definition.
 * The tool tries to import the query one by one, if one of the imports fails the import process is stopped with a risk of incomplete imports.
-* The columns for the CSV format at the moment have a fixed position and the header is required.
+* The columns for the CSV format at the moment have a fixed position.
 
 
 ## Disclaimer
