@@ -25,6 +25,7 @@ func Export(arguments *ExportCmd) error {
 	case "csv":
 		options := format.CsvOptions{
 			IncludeHeader: arguments.CsvIncludeHeader,
+			Delimiter:     arguments.CsvDelimiter,
 		}
 		queryDefinitionsAsString, err = format.ToCsv(queryDefinitions, options)
 	}

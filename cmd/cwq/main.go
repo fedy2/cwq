@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/alecthomas/kong"
 
+	"github.com/fedy2/cwq/internal/cli/mapper"
 	"github.com/fedy2/cwq/internal/context"
 	"github.com/fedy2/cwq/internal/export"
 	cimport "github.com/fedy2/cwq/internal/import"
@@ -25,7 +26,9 @@ func main() {
 		kong.Vars{"version": version},
 		kong.UsageOnError(),
 		kong.Name("cwq"),
-		kong.Description("A small tool to import and export CloudWatch query definitions."))
+		kong.Description("A small tool to import and export CloudWatch query definitions."),
+		kong.NamedMapper("character", mapper.CharacterMapper{}),
+	)
 
 	// Call the Run() method of the selected parsed command.
 	err := ctx.Run(&context.Context{Debug: cli.Debug})

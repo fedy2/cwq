@@ -19,14 +19,15 @@ var headerRecord = []string{
 
 type CsvOptions struct {
 	IncludeHeader bool
+	Delimiter     rune
 }
 
 func ToCsv(queryDefinitions []cloudwatch.QueryDefinition, options CsvOptions) (string, error) {
 
 	buffer := new(bytes.Buffer)
 
-	// TODO: enable passing CSV options
 	writer := csv.NewWriter(buffer)
+	writer.Comma = options.Delimiter
 
 	if options.IncludeHeader {
 		err := writer.Write(headerRecord)
